@@ -1,0 +1,27 @@
+# Definición de los servicios (contenedores)
+services:
+  # Nombre del servicio de la base de datos
+  postgres-db:
+    # imagen oficial de PostgreSQL
+    image: postgres:15
+
+    # Nombre del contenedor para identificarlo fácilmente
+    container_name: hotel_postgres_db
+    environment:
+      - POSTGRES_DB=gestion_hotelera_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+
+    # Mapeo de volúmenes. Esto es crucial.
+    # Monta nuestra carpeta local './db' dentro del contenedor en '/docker-entrypoint-initdb.d'
+    # PostgreSQL ejecutará automáticamente cualquier script .sql que encuentre en esa carpeta al iniciar por primera vez.
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+
+    # Mapeo de puertos.
+    # Expone el puerto 5432 del contenedor al puerto 5432 de nuestra máquina local.
+    ports:
+      - "5432:5432"
+
+    # Política de reinicio para que el contenedor se levante automáticamente
+    restart: always
